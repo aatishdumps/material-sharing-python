@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% set active_page = "register" %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% block body %}
+<div class="row justify-content-center my-5">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-2">Learning and sharing starts here🚀</h4>
+                <p class="mb-4">Please register to get started!</p>
+                <form class="mb-3" action="" method="POST">
+                    <div class="row">
+                        <div class="mb-3 col-12 col-md-6">
+                            <label for="fname" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="fname" name="fname"
+                                placeholder="Enter first name" autofocus="">
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label for="lname" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lname" name="lname"
+                                placeholder="Enter last name">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username"
+                            placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="mobile" class="form-control" id="mobile" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="10" name="mobile" placeholder="Enter mobile number">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-control" name="password"
+                            placeholder="············">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="confirm">Confirm Password</label>
+                        <input type="password" id="confirm" class="form-control" name="confirm"
+                            placeholder="············">
+                    </div>
+                    <button class="btn btn-primary d-grid w-100">Sign up</button>
+                </form>
+
+                <p class="text-center">
+                    <span>Already have an account?</span>
+                    <a href="/login">
+                        <span>Sign in instead</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

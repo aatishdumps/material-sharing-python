@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% set active_page = "home" %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% block body %}
+<div class="row">
+  <div class="col-12 col-md-8 col-lg-9">
+    <h3>Latest Materials</h3>
+    <div class="row gx-2" id="mat"></div>
+    <div class="text-center mb-4">
+      <button id="load-more" style="display: none;" class="btn btn-block btn-info">Show More</button>
+    </div>
+  </div>
+  <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
+    <h3>Categories</h3>
+    <div class="list-group list-group-flush card">
+      {% for category in categories %}
+      {% if category.status == 1 %}
+      <a href="{{url_for('category_view',id=category.id)}}"
+        class="list-group-item list-group-item-action">{{category.category_name}}</a>
+      {% endif %}
+      {% endfor %}
+    </div>
+    <h3 class="mt-3">Courses</h3>
+    <div class="list-group list-group-flush card">
+      {% for course in courses %}
+      {% if course.status == 1 %}
+      <a href="{{url_for('course_view',id=course.id)}}"
+        class="list-group-item list-group-item-action">{{course.course_name}}</a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock body %}
+{% block scripts %}
+<script>
+  $(function () {
+    offset = 0;
+    function loadMaterials() {
+      $.ajax({
+        url: "{{url_for('get_materials')}}",
+        type: "POST",
+        data: {
+          offset: offset
+        },
+        success: function (response) {
+          $('#mat').append(response);
+          $('.lazy').lazy();
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+          var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+          });
+          if (response.trim() != '') {
+            $('#load-more').show();
+          } else {
+            $('#load-more').hide();
+          }
+        }
+      });
+    }
+    $('#load-more').click(function () {
+      offset = offset + 1;
+      loadMaterials();
+    });
+    loadMaterials();
+  });
+</script>
+{% endblock scripts %}

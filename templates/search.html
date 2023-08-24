@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% block body %}
+<h3>Search results for <b>{{query}}</b></h3><div class="row gx-2" id="mat"></div>
+<div class="text-center mb-4">
+    <button id="load-more" style="display: none;" class="btn btn-block btn-info">Show More</button>
+</div>
+{% endblock body %}
+{% block scripts %}
+<script>
+    $(function () {
+        offset = 0;
+        function loadMaterials() {
+            $.ajax({
+                url: "{{url_for('search')}}",
+                data: {
+                    offset: offset,
+                    query: "{{query}}",
+                },
+                success: function (response) {
+                    $('#mat').append(response);
+                    $('.lazy').lazy();
+                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl)
+                    });
+                    console.log(response);
+                    if (response.trim() != '') {
+                        $('#load-more').show();
+                    } else {
+                        $('#load-more').hide();
+                    }
+                }
+            });
+        }
+        $('#load-more').click(function () {
+            offset = offset + 1;
+            loadMaterials();
+        });
+        loadMaterials();
+    });
+</script>
+{% endblock scripts %}

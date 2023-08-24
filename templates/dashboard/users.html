@@ -1,0 +1,194 @@
+{% extends 'dashboard/base.html' %}
+{% set active_page = "list users" %}
+{% block head %}
+<link rel="stylesheet" href="/static/assets/vendor/css/jquery-confirm.min.css">
+{% endblock head %}
+{% block body %}
+<div class="card">
+    {% if users %}
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>UID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for user in users %}
+                <tr data-id="{{ user.id }}">
+                    <td>{{ (pagination.page -1) * pagination.per_page + loop.index }}</td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.first_name + ' ' + user.last_name }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.mobile }}</td>
+                    <td>
+                        <select id="roleselect" class="form-select w-auto">
+                            <option value="admin" {{'selected' if user.role=='admin' else '' }}>Admin</option>
+                            <option value="user" {{'selected' if user.role=='user' else '' }}>User</option>
+                            <option value="faculty" {{'selected' if user.role=='faculty' else '' }}>Faculty</option>
+                        </select>
+                    </td>
+                    <td>
+                        {% if user.status == 1 %}
+                        <span class="badge bg-label-success me-1">Active</span>
+                        {% else %}
+                        <span class="badge bg-label-danger me-1">Blocked</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.created_at }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <!-- <button type="button" class="btn btn-danger delete">Delete</button> -->
+                            {% if user.status == 0 %}
+                            <button type="button" class="btn btn-success status">Activate</button>
+                            {% else %}
+                            <button type="button" class="btn btn-warning status">Block</button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="demo-inline-spacing">
+        {{ pagination.links }}
+    </div>
+    {% else %}
+    <div class="text-center h6 m-auto p-4">No Records Available</div>
+    {% endif %}
+</div>
+{% endblock body %}
+{% block scripts %}
+<script src="/static/assets/vendor/js/jquery-confirm.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#roleselect').on('change', function () {
+            let tr = $(this).parent().parent();
+            let id = tr.data('id');
+            let role = this.value;
+            $.ajax({
+                url: "{{url_for('role_user')}}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    role: role,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        $.alert({
+                            type: 'green',
+                            icon: 'fa fa-circle-check',
+                            title: 'Changed',
+                            content: data.message,
+                            onClose: function () {
+                                window.location.reload();
+                            },
+                        });
+                    }
+                    else {
+                        $.alert({
+                            type: 'red',
+                            icon: 'fa fa-circle-xmark',
+                            title: 'Failed',
+                            content: data.message,
+                        });
+                    }
+                }
+            });
+        });
+        $('.status').click(function () {
+            let tr = $(this).parent().parent().parent();
+            let id = tr.data('id');
+            let btn = $(this);
+            $.ajax({
+                url: "{{url_for('user_status')}}",
+                type: 'POST',
+                data: {
+                    id: id,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $.alert({
+                        type: 'green',
+                        icon: 'fa fa-circle-check',
+                        title: 'Status changed',
+                        content: data.message,
+                        onClose: function () {
+                            if (data.status == 1) {
+                                tr.find('.badge').removeClass('bg-label-danger').addClass('bg-label-success').html('Active');
+                                btn.removeClass('btn-success').addClass('btn-warning').html('Block');
+                            }
+                            else {
+                                tr.find('.badge').removeClass('bg-label-success').addClass('bg-label-danger').html('Blocked');
+                                btn.removeClass('btn-warning').addClass('btn-success').html('Activate');
+                            }
+                        },
+                    });
+                }
+            });
+        });
+        // $('.delete').click(function () {
+        //     let tr = $(this).parent().parent().parent();
+        //     let id = tr.data('id');
+        //     $.confirm({
+        //         type: 'red',
+        //         icon: 'fa fa-warning',
+        //         title: 'Delete user',
+        //         content: 'Do you really want to delete this user ? All the materials of this user will be deleted.',
+        //         buttons: {
+        //             confirm: {
+        //                 text: 'Delete',
+        //                 btnClass: 'btn-red',
+        //                 action: function () {
+        //                     $.ajax({
+        //                         url: "{{url_for('delete_user')}}",
+        //                         type: 'POST',
+        //                         data: {
+        //                             id: id,
+        //                         },
+        //                         dataType: 'json',
+        //                         success: function (data) {
+        //                             if (data.status) {
+        //                                 $.alert({
+        //                                     type: 'green',
+        //                                     icon: 'fa fa-circle-check',
+        //                                     title: 'Deleted',
+        //                                     content: data.message,
+        //                                     onClose: function () {
+        //                                         tr.hide("slow", function () { $(this).remove(); })
+        //                                     },
+        //                                 });
+        //                             }
+        //                             else {
+        //                                 $.alert({
+        //                                     type: 'red',
+        //                                     icon: 'fa fa-circle-xmark',
+        //                                     title: 'Failed',
+        //                                     content: data.message,
+        //                                 });
+        //                             }
+
+        //                         }
+        //                     });
+        //                 }
+        //             },
+        //             cancel: function () {
+        //             },
+        //         }
+        //     });
+        // });
+    });
+</script>
+{% endblock scripts %}

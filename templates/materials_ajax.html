@@ -1,0 +1,33 @@
+{% for material in materials %}
+{% if material.ext=='pdf' %}
+{% set image = '/static/assets/filetypes/pdf.jpg' %}
+{% elif material.ext=='zip' %}
+{% set image = '/static/assets/filetypes/zip.jpg' %}
+{% elif material.ext=='xlsx' %}
+{% set image = '/static/assets/filetypes/xlxs.jpg' %}
+{% elif material.ext=='doc' %}
+{% set image = '/static/assets/filetypes/doc.jpg' %}
+{% elif material.ext in ['mp4','mkv'] %}
+{% set image = '/static/assets/filetypes/video.jpg' %}
+{% elif material.ext in ['ppt','pptx'] %}
+{% set image = '/static/assets/filetypes/ppt.jpg' %}
+{% else %}
+{% set image = '/static/assets/filetypes/other.jpg' %}
+{% endif %}
+<div class="col-12 col-sm-6 col-md-4 col-lg-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{material.title}}">
+  <a href="{{url_for('material_view',id=material.id)}}">
+    <div class="card mb-2 shadow-sm material border-0">
+      <img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 300'%3e%3c/svg%3e"
+        data-src="{{image}}" class="lazy card-img-top pe-none" alt="material">
+      <div class="card-body p-2">
+        <h5 class="card-title text-truncate mb-1">{{material.title}}</h5>
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <small class="text-muted d-block d-md-inline"><i class="fas fa-user me-1"></i>{{material.user}}</small>
+          <small class="text-muted d-block d-md-inline"><i
+              class="fas fa-clock me-1"></i>{{material.created_at.strftime('%d/%m %I:%M %p')}}</small>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+{% endfor %}

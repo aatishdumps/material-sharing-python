@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="/static/assets/vendor/css/theme-default.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+    <script src="/static/assets/vendor/js/helpers.js"></script>
+    <script src="/static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="/static/assets/js/config.js"></script>
+    <title>{% block title %}{% endblock title %}</title>
+    <style>
+        .material:hover {
+            cursor: pointer;
+            box-shadow: 0 2px 25px -5px rgba(var(--bs-body-color-rgb), .16), 0 25px 21px -5px rgba(var(--bs-body-color-rgb), .1) !important;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">{{APP_NAME}}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if active_page == 'home' else '' }}" href="/">Home</a>
+                    </li>
+                    {% if user %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if active_page == 'dashboard' else '' }}"
+                            href="{{url_for('dashboard')}}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if active_page == 'chatroom' else '' }}"
+                            href="{{url_for('chatroom')}}">Chatroom</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout ({{user.username}})</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if active_page == 'login' else '' }}" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if active_page == 'register' else '' }}"
+                            href="/register">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <form class="d-flex" action="{{url_for('material_search')}}">
+                    <input class="form-control me-2" type="search" placeholder="Search" name="query"
+                        aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <main class="container-fluid">
+        {% block body %}
+        {% endblock body %}
+    </main>
+    <footer class="bg-dark text-center p-3 text-light mt-auto">
+        © 2023 {{APP_NAME}}
+    </footer>
+    <script src="/static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/static/assets/vendor/js/bootstrap.js"></script>
+    <script src="/static/assets/vendor/js/jquery.lazy.min.js"></script>
+    {% block scripts %}
+    {% endblock scripts %}
+</body>
+
+</html>

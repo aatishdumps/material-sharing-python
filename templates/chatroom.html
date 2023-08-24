@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% set active_page = "chatroom" %}
+{% block body %}
+<h3>{{title}}</h3>
+<style>
+    .chat-area {
+        height: 65vh;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="chat-area mb-3" id="message-area"></div>
+<form method="POST" action="">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Message" id="message" aria-label="Message"
+            autocomplete="off" aria-autocomplete="none">
+        <button class="btn btn-outline-primary" type="submit">Send</button>
+    </div>
+</form>
+{% endblock body %}
+{% block scripts %}
+<script>
+    $(document).ready(function () { get_messages(); });
+    function timeSince(dateString) {
+        dateString = dateString.replace('GMT', '');
+        const date = new Date(dateString);
+        const seconds = Math.floor((new Date() - date) / 1000);
+        if (seconds < 5) {
+            return "just now";
+        } else if (seconds < 60) {
+            return Math.floor(seconds) + " sec ago";
+        } else if (seconds < 3600) {
+            const minutes = Math.floor(seconds / 60);
+            return minutes + " min ago";
+        } else if (seconds < 86400) {
+            const hours = Math.floor(seconds / 3600);
+            return hours + " hr ago";
+        } else {
+            const days = Math.floor(seconds / 86400);
+            return days + " days ago";
+        }
+    }
+
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var message = $('#message').val();
+        if (message.length != 0) {
+            $.ajax({
+                type: 'POST',
+                url: '/chatroom',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    message: message,
+                    action: 'sendmessage',
+                }),
+                success: function () {
+                    get_messages();
+                },
+            });
+            $('#message').val('');
+        }
+    });
+    function get_messages() {
+        $.ajax({
+            type: 'GET',
+            url: '/chatroom',
+            data: 'action=getmessages',
+            success: function (messages) {
+                $('#message-area').empty();
+                for (var i = 0; i < messages.length; i++) {
+                    var message = messages[i];
+                    var html = '<div class="message mb-2">';
+                    if (message.role == 'admin')
+                        role = '<span class="small text-danger"> (Admin)</span>';
+                    else if (message.role == 'faculty')
+                        role = '<span class="small text-warning"> (Faculty)</span>';
+                    else
+                        role = '<span class="small text-info"> (User)</span>';
+                    html += '<div class="d-flex align-items-center mb-2">';
+                    html += '<img src="https://ui-avatars.com/api/?length=1&background=random&name=' + message.username + '" class="rounded-circle me-2" width="32" height="32" alt="' + message.username + '">';
+                    html += '<strong>' + message.username + role + ':</strong>';
+                    html += '<span class="ms-2 text-muted">' + timeSince(message.created_at) + '</span>';
+                    html += '</div>';
+                    html += '<div class="message-text bg-light p-2 rounded shadow-sm">' + message.message + '</div>';
+                    html += '</div>';
+                    $('#message-area').append(html);
+                }
+                $('#message-area').scrollTop($('#message-area')[0].scrollHeight);
+            },
+        });
+    }
+    setInterval(function () {
+        get_messages();
+    }, 10000);
+</script>
+{% endblock scripts %}

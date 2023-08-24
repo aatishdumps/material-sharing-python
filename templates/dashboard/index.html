@@ -1,0 +1,84 @@
+{% extends 'dashboard/base.html' %}
+{% set active_page = "dashboard" %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% block body %}
+<div class="row">
+    {% if user.role=='admin' %}
+    <div class="col-6 col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title header-elements">
+                    <h5 class="m-0 me-2 d-block mb-1 fw-semibold">Users</h5>
+                    <div class="card-title-elements ms-auto">
+                        <div class="btn-icon btn-sm btn-secondary">
+                            <span class="fa fa-users"></span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title mb-2">{{dashdata.total_users}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title header-elements">
+                    <h5 class="m-0 me-2 d-block mb-1 fw-semibold">Materials</h5>
+                    <div class="card-title-elements ms-auto">
+                        <div class="btn-icon btn-sm btn-primary">
+                            <span class="fa fa-file-zipper"></span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title mb-2">{{dashdata.total_materials}}</h3>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-6 col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title header-elements">
+                    <h5 class="m-0 me-2 d-block mb-1 fw-semibold">Categories</h5>
+                    <div class="card-title-elements ms-auto">
+                        <div class="btn-icon btn-sm btn-warning">
+                            <span class="fa fa-filter"></span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title mb-2">{{dashdata.total_categories}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title header-elements">
+                    <h5 class="m-0 me-2 d-block mb-1 fw-semibold">Courses</h5>
+                    <div class="card-title-elements ms-auto">
+                        <div class="btn-icon btn-sm btn-dark">
+                            <span class="fa fa-graduation-cap"></span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title mb-2">{{dashdata.total_courses}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title header-elements">
+                    <h5 class="m-0 me-2 d-block mb-1 fw-semibold">My Materials</h5>
+                    <div class="card-title-elements ms-auto">
+                        <div class="btn-icon btn-sm btn-info">
+                            <span class="fa fa-file-pdf"></span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title mb-2">{{dashdata.user_materials}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

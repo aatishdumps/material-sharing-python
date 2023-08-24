@@ -1,0 +1,104 @@
+{% extends 'dashboard/base.html' %}
+{% set active_page = "add material" %}
+{% block head %}
+<link rel="stylesheet" href="/static/assets/vendor/css/bootstrap-select.min.css">
+{% endblock head %}
+{% block body %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Material Title</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Material Title" id="title" name="title">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="description">Material Descripition</label>
+                    <textarea class="form-control" placeholder="Material Descripition" id="description"
+                        name="description" rows="3"></textarea>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="catSelect" class="form-label">Category</label>
+                    <select id="catSelect" class="selectpicker d-block w-100" name="category_id"
+                        title="-- Select Category --" data-live-search="true" data-dropup-auto="false">
+                    </select>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="courseSelect" class="form-label">Course</label>
+                    <select id="courseSelect" class="selectpicker d-block w-100" name="course_id"
+                        title="-- Select Course --" data-live-search="true" data-dropup-auto="false">
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label d-block" for="type">Material Type</label>
+                    <div class="form-check  d-inline-block pe-3">
+                        <input name="type" class="form-check-input" type="radio" value="1" id="radio1" checked>
+                        <label class="form-check-label" for="radio1">Online</label>
+                    </div>
+                    <div class="form-check d-inline-block">
+                        <input name="type" class="form-check-input" type="radio" value="2" id="radio2">
+                        <label class="form-check-label" for="radio2">Offline</label>
+                    </div>
+                </div>
+                <div class="mb-3" id="fileDiv">
+                    <label for="formFile" class="form-label">Upload Your File</label>
+                    <input class="form-control" type="file" name="file" accept=".pdf,.zip,.pptx,.ppt,.mp4,.mkv,.xlsx,.doc,.docx">
+                </div>
+                <div class="mb-3 d-none" id="pickupDiv">
+                    <label class="form-label" for="pickup">Pickup Notes</label>
+                    <textarea class="form-control" placeholder="e.g. At BBIT Library,&#10;1.30-2.00PM" id="pickup"
+                        name="pickup" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Material Status</label>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="material_status" name="material_status"
+                            checked>
+                        <label class="form-check-label" for="material_status">Blocked / Active</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock body %}
+{% block scripts %}
+<script src="/static/assets/vendor/js/bootstrap-select.min.js"></script>
+<script>
+    $(document).ready(function () {
+        getCategories();
+        getCourses();
+        $('input[name=type]').change(function () {
+            value = $(this).val();
+            if (value == 1) {
+                $('#pickupDiv').addClass('d-none');
+                $('#fileDiv').removeClass('d-none');
+            }
+            else if (value == 2) {
+                $('#pickupDiv').removeClass('d-none');
+                $('#fileDiv').addClass('d-none');
+            }
+        });
+        function getCategories() {
+            $.getJSON('/dashboard/categories/getalljson')
+                .done(function (data) {
+                    $.each(data, function (idx, obj) {
+                        $("#catSelect").append('<option value="' + obj.id + '">' + obj.category_name + '</option>').selectpicker('refresh');
+                    });
+                });
+        }
+        function getCourses() {
+            $.getJSON('/dashboard/courses/getalljson')
+                .done(function (data) {
+                    $.each(data, function (idx, obj) {
+                        $("#courseSelect").append('<option value="' + obj.id + '">' + obj.course_name + '</option>').selectpicker('refresh');
+                    });
+                });
+        }
+    });
+</script>
+{% endblock scripts %}

@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+{% set active_page = "add category" %}
+{% block body %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="category_name">Category Name</label>
+                <div class="input-group input-group-merge">
+                    <span id="category_name_ic" class="input-group-text"><i class="fa fa-file-signature"></i></span>
+                    <input type="text" class="form-control" placeholder="Category Name" id="category_name" name="category_name"
+                        aria-describedby="category_name_ic">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Category Status</label>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="category_status" name="category_status" checked>
+                    <label class="form-check-label" for="category_status">Blocked / Active</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock body %}

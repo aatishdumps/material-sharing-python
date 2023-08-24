@@ -1,0 +1,107 @@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+        <a href="/dashboard" class="app-brand-link">
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">{{APP_NAME}}</span>
+        </a>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="fa fa-chevron-left align-mididdle" style="position: relative;left: 6.5px;top: 4px;"></i>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Home -->
+        <li class="menu-item">
+            <a href="/" target="_blank" class="menu-link">
+                <i class="menu-icon fa fa-home"></i>
+                <div>Home</div>
+            </a>
+        </li>
+        <!-- Dashboard -->
+        <li class="menu-item {{ 'active' if active_page == 'dashboard' else '' }}">
+            <a href="/dashboard" class="menu-link">
+                <i class="menu-icon fa fa-dashboard"></i>
+                <div>Dashboard</div>
+            </a>
+        </li>
+        {% if user.role in ['admin','faculty'] %}
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">{{ 'Admin' if user.role == 'admin' else 'Faculty'}} Area</span>
+        </li>
+        {% endif %}
+        {% if user.role == 'admin' %}
+        <li class="menu-item menu-item  {{ 'active' if active_page == 'settings' else '' }}">
+            <a href="{{url_for('dashboard_settings')}}" class="menu-link">
+                <i class="menu-icon fa fa-cogs"></i>
+                <div>Settings</div>
+            </a>
+        </li>
+        <li class="menu-item {{ 'active open' if active_page == 'list users' else '' }}">
+            <a href="{{url_for('dashboard_users')}}" class="menu-link">
+                <i class="menu-icon fa fa-users"></i>
+                <div>Manage Users</div>
+            </a>
+        </li>
+        {% endif %}
+        {% if user.role in ['admin','faculty'] %}
+        <li class="menu-item {{ 'active open' if active_page in ['add category','list category'] else '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon fa fa-filter"></i>
+                <div>Manage Categories</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ 'active open' if active_page == 'add category' else '' }}">
+                    <a href="{{url_for('add_category')}}" class="menu-link">
+                        <div>Add Category</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ 'active open' if active_page == 'list category' else '' }}">
+                    <a href="{{url_for('dashboard_categories')}}" class="menu-link">
+                        <div>List Categories</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item {{ 'active open' if active_page in ['add course','list course'] else '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon fa fa-graduation-cap"></i>
+                <div>Manage Courses</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ 'active open' if active_page == 'add course' else '' }}">
+                    <a href="{{url_for('add_course')}}" class="menu-link">
+                        <div>Add Course</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ 'active open' if active_page == 'list course' else '' }}">
+                    <a href="{{url_for('dashboard_courses')}}" class="menu-link">
+                        <div>List Courses</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        {% endif %}
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Actions</span>
+        </li>
+        <li class="menu-item  {{ 'active open' if active_page in ['add material','list material'] else '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon fa fa-file-pdf"></i>
+                <div>Manage Materials</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item  {{ 'active open' if active_page == 'add material' else '' }}">
+                    <a href="{{url_for('add_material')}}" class="menu-link">
+                        <div>Add Material</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ 'active open' if active_page == 'list material' else '' }}">
+                    <a href="{{url_for('dashboard_materials')}}" class="menu-link">
+                        <div>List Materials</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% set active_page = "login" %}
+{% block title %} {{title}} - {{APP_NAME}} {% endblock title %}
+{% block body %}
+<div class="row justify-content-center my-5">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-2">Welcome to {{APP_NAME}}! 👋</h4>
+                <p class="mb-4">Please sign-in to your account to get started</p>
+                <form class="mb-3" action="" method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email"
+                            autofocus />
+                    </div>
+                    <div class="mb-3">
+                        <!-- <div class="d-flex justify-content-between">
+                            <label class="form-label" for="password">Password</label>
+                            <a href="auth-forgot-password-basic.html">
+                                <small>Forgot Password?</small>
+                            </a>
+                        </div> -->
+                        <div class="input-group input-group-merge">
+                            <input type="password" id="password" class="form-control" name="password"
+                                placeholder="············"/>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                    </div>
+                </form>
+                <p class="text-center">
+                    <span>New on our platform?</span>
+                    <a href="/register">
+                        <span>Create an account</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
