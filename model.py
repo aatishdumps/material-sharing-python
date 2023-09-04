@@ -145,10 +145,12 @@ class Dashboard:
             settings = mycursor.fetchone()
             return settings
         else:
-            sql = "update settings set `material_per_page` = %s, `approval_required` = %s;"
+            sql = "update settings set `material_per_page` = %s, `max_upload_file_size` = %s, `approval_required` = %s;"
             material_per_page = request.get("material_per_page")
+            max_upload_file_size = request.get("max_upload_file_size")
             approval_required = 1 if "approval_required" in request else 0
-            val = (material_per_page, approval_required)
+            val = (material_per_page, max_upload_file_size, approval_required)
+            print(sql%val)
             try:
                 mycursor.execute(sql, val)
                 mydb.commit()

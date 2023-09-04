@@ -591,7 +591,7 @@ def add_material():
         if type == '1':
             if 'file' in request.files and request.files['file'].filename != '':
                 file = request.files['file']
-                max_file_size = 1024*1024*5
+                max_file_size = settings['max_upload_file_size']
                 # check file size
                 pos = file.tell()
                 file.seek(0, 2)
@@ -604,8 +604,8 @@ def add_material():
                 if ext not in allowed_file_types:
                     flash('File type not allowed.', 'danger')
                     return redirect(url_for('add_material'))
-                if size > max_file_size:
-                    flash('File should not exceed 5 MB.', 'danger')
+                if size > (max_file_size * 1024):
+                    flash(f'File size should not exceed {max_file_size} KB.', 'danger')
                     return redirect(url_for('add_material'))
             else:
                 flash('Please upload a file.', 'danger')
